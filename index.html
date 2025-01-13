@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>두 사람의 수비학 간단 분석</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    body {
+      background: #fff3f6; 
+      padding: 20px; 
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px; 
+      margin: 0 auto;
+      background: white; 
+      padding: 30px; 
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center; 
+      color: #e84393; 
+      margin-bottom: 30px;
+    }
+    .input-section {
+      text-align: center; 
+      margin-bottom: 30px;
+    }
+    input {
+      width: 80%; 
+      max-width: 400px;
+      padding: 15px; 
+      font-size: 16px;
+      border: 2px solid #ffc9d5; 
+      border-radius: 10px;
+      outline: none; 
+      margin: 5px 0;
+    }
+    input:focus {
+      border-color: #e84393;
+    }
+    button {
+      display: block; 
+      width: 200px; 
+      margin: 20px auto; 
+      padding: 15px;
+      background: #e84393; 
+      color: white; 
+      border: none; 
+      border-radius: 10px;
+      cursor: pointer; 
+      font-size: 16px; 
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #d63384; 
+      transform: translateY(-2px);
+    }
+    .result {
+      display: none; 
+      background: #fff8fa;
+      padding: 25px; 
+      border-radius: 10px;
+      margin-top: 30px;
+    }
+    .analysis-box {
+      background: #ffffff; 
+      padding: 20px;
+      margin: 20px 0; 
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .analysis-box h2 {
+      color: #e84393; 
+      margin-bottom: 10px;
+    }
+    .highlight {
+      color: #e84393; 
+      font-weight: bold;
+    }
+    .compatibility-score {
+      text-align: center; 
+      font-size: 22px; 
+      margin: 20px 0; 
+      color: #e84393;
+    }
+    .sub-title {
+      margin: 15px 0 5px; 
+      font-weight: bold; 
+      color: #ad1457;
+    }
+    ul { 
+      margin-left: 20px; 
+      list-style-type: disc; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💘 두 사람의 수비학 간단 분석 💘</h1>
+
+    <div class="input-section">
+      <div>
+        <input type="text" id="userName1" placeholder="이름을 입력하세요." />
+      </div>
+      <div>
+        <input type="text" id="userName2" placeholder="이름을 입력하세요." />
+      </div>
+      <button onclick="analyzeLoveFortune()">궁합 분석하기</button>
+    </div>
+
+    <div id="result" class="result">
+      <!-- 첫 번째 사람 -->
+      <div id="analysis1" class="analysis-box"></div>
+      <!-- 두 번째 사람 -->
+      <div id="analysis2" class="analysis-box"></div>
+      <!-- 궁합 점수 -->
+      <div class="compatibility-score">
+        두 분의 궁합점수: <span id="compatibilityScore"></span>점
+      </div>
+      <!-- 궁합 향상 조언 -->
+      <div id="compatAdviceBox" class="analysis-box"></div>
+    </div>
+  </div>
+
+  <script>
+    // "이름 → 숫자" 매핑
+    const nameToNumber = {
+      '민': 2, '임': 2, '노': 2, '모': 2, '삼': 2, '묵': 2, '문': 2, '미': 2, '누': 2, 
+      '흠': 2, '움': 2, '점': 2, '무': 2, '겸': 2, '림': 2, '매': 2, '맹': 2, '나': 2, 
+      '남': 2, '마': 2, '명': 2, '목': 2,
+
+      '김': 3, '금': 3, '막': 3, '봄': 3, '내': 3,
+
+      '석': 4, '로': 4, '학': 4, '슬': 4, '라': 4, '종': 4, '루': 4, '일': 4, '식': 4, 
+      '래': 4, '례': 4, '록': 4, '소': 4, '리': 4, '말': 4, '란': 4, '숙': 4, '근': 4, 
+      '솔': 4, '순': 4,
+
+      '태': 5, '택': 5, '규': 5, '분': 5, '돔': 5, '던': 5, '만': 5, '엽': 5, '평': 5, 
+      '효': 5, '훈': 5, '도': 5, '다': 5, '봄': 5, '둔': 5, '령': 5, '봉': 5, '탁': 5, 
+      '탄': 5, '대': 5, '덕': 5, '보': 5, '단': 5, '득': 5, '련': 5, '운': 5, '편': 5, 
+      '섭': 5, '복': 5, '필': 5, '담': 5, '듬': 5, '렴': 5, '엄': 5, '표': 5, '포': 5, 
+      '돈': 5, '두': 5, '갑': 5, '당': 5, '딘': 5, '후': 5, '욱': 5, '팽': 5,
+
+      '정': 6,
+
+      '최': 7, '동': 7, '차': 7, '추': 7, '건': 7, '채': 7, '화': 7, '좌': 7, '찬': 7, 
+      '하': 7, '준': 7,
+
+      '박': 8, '가': 8, '람': 8, '혜': 8, '늘': 8, '호': 8, '해': 8, '예': 8, '중': 8, 
+      '궁': 8, '룡': 8, '술': 8, '곽': 8, '계': 8, '옹': 8, '혁': 8, '강': 8, '율': 8, 
+      '용': 8, '송': 8, '응': 8, '사': 8, '병': 8, '열': 8, '비': 8, '군': 8, '바': 8, 
+      '야': 8, '육': 8, '방': 8, '빙': 8, '곡': 8, '양': 8, '백': 8, '승': 8, '옥': 8, 
+      '을': 8, '상': 8, '오': 8, '흥': 8, '거': 8, '늠': 8, '반': 8, '억': 8, '남궁': 8, 
+      '함': 8, '독고': 8, '렬': 8, '권': 8, '형': 8, '영': 8, '범': 8, '고': 8, '배': 8, 
+      '랑': 8, '빛': 8, '결': 8, '항': 8, '밤': 8, '부': 8, '감': 8, '궉': 8, '관': 8, 
+      '익': 8, '구': 8, '애': 8, '광': 8, '국': 8, '웅': 8, '아': 8, '황': 8, '공': 8, 
+      '름': 8, '산': 8, '왕': 8, '황보': 8, '사공': 8, '동방': 8,
+
+      '순': 9, '이': 9, '서': 9, '선': 9, '여': 9, '녀': 9, '존': 9, '회': 9, '선우': 9, 
+      '지': 9, '향': 9, '장': 9, '제': 9, '주': 9, '철': 9, '님': 9, '제갈': 9, '심': 9, 
+      '서문': 9, '수': 9, '조': 9, '재': 9, '성': 9, '자': 9, '기': 9, '실': 9, '찰': 9, 
+      '어': 9, '요': 9, '희': 9, '홍': 9, '유': 9, '우': 9, '언': 9, '귀': 9, '춘': 9, 
+      '설': 9, '길': 9, '행': 9, '휴': 9, '시': 9, '헌': 9, '낭': 9, '잠': 9, '허': 9, 
+      '갈': 9,
+
+      '안': 10, '연': 10, '환': 10, '윤': 10, '인': 10, '란': 10, '원': 10, '빈': 10, 
+      '론': 10, '완': 10, '전': 10, '온': 10, '린': 10, '한': 10, '손': 10,
+
+      '현': 11, '진': 11, '경': 11, '극': 11, '신': 11, '청': 11, '피': 11, '염': 11, 
+      '키': 11, '창': 11, '간': 11, '닷': 11, '심': 11, '척': 11, '타': 11, '음': 11, 
+      '천': 11, '세': 11, '감': 11, '본': 11, '션': 11, '첨': 11, '탐': 11, '품': 11, 
+      '위': 11, '균': 11, '견': 11, '벼': 11, '숀': 11, '초': 11, '파': 11, '총': 11, 
+      '의': 11, '검': 11, '곤': 11, '변': 11, '직': 11, '카': 11, '판': 11, '휘': 11
+    };
+
+    // 2~11에 대한 정보 (연애 조언 등 확장)
+    const numberInfo = {
+      2: {
+        loveScore: 82,
+        basic: "신중하고 진지한 성향",
+        love: "깊이 있는 관계를 추구",
+        style: "책임감 있게 천천히 접근",
+        additional: "계획적이고 꼼꼼한 편",
+        loveAdvice: "감정을 좀 더 자주 표현하며 기회를 놓치지 말아요",
+        compatAdvice: "상대의 즉흥성도 이해해 보세요"
+      },
+      3: {
+        loveScore: 85,
+        basic: "매력적이고 풍요로운 성향",
+        love: "상대방의 자유를 존중",
+        style: "오는 사람 막지 않고 가는 사람 잡지 않음",
+        additional: "예술적 감각이 좋고 창의적",
+        loveAdvice: "관심 있는 사람에게는 적극적으로 표현하면 더 좋아요",
+        compatAdvice: "때로는 약간의 질투심도 연애에 활력을 줍니다"
+      },
+      4: {
+        loveScore: 87,
+        basic: "리더십이 강한 자수성가형",
+        love: "책임감과 진중함을 중요시",
+        style: "한 번 시작하면 끝까지 충실",
+        additional: "타인을 잘 이끌지만, 부담감도 큼",
+        loveAdvice: "상대방 의견을 존중하면 더 좋은 관계가 돼요",
+        compatAdvice: "부드러운 리더십으로 더 큰 시너지를 낼 수 있어요"
+      },
+      5: {
+        loveScore: 83,
+        basic: "지혜롭고 조언자적인 성향",
+        love: "분석적이고 신중한 연애",
+        style: "깊이 있는 대화와 정신적 교감을 선호",
+        additional: "문제 해결 능력이 뛰어남",
+        loveAdvice: "구체적인 행동과 약속 이행으로 신뢰를 쌓아보세요",
+        compatAdvice: "가끔은 감정적 표현도 더해주면 좋습니다"
+      },
+      6: {
+        loveScore: 89,
+        basic: "낭만적이고 감성적인 성향",
+        love: "로맨틱한 분위기를 선호",
+        style: "감정 교류로 힐링과 안정을 주고받음",
+        additional: "예술적 감수성이 풍부함",
+        loveAdvice: "지나친 감정 소모를 피하고 현실적 균형을 잡아보세요",
+        compatAdvice: "서로의 감성 포인트를 잘 맞춰주면 큰 시너지"
+      },
+      7: {
+        loveScore: 84,
+        basic: "독립적이고 진취적인 성향",
+        love: "자유롭고 활동적",
+        style: "열정적이고 적극적이나 고집이 있을 수 있음",
+        additional: "새로운 것에 대한 호기심이 많음",
+        loveAdvice: "상대방의 자유도 존중하면 충돌을 줄일 수 있어요",
+        compatAdvice: "고집은 조금만 누그러뜨려주세요"
+      },
+      8: {
+        loveScore: 81,
+        basic: "안정적이고 신중한 성향",
+        love: "믿음직하며 성실한 관계를 추구",
+        style: "느리지만 확실한 사랑",
+        additional: "재물운이 비교적 좋은 편",
+        loveAdvice: "너무 느린 템포로 상대를 지치게 하지 않도록 노력하세요",
+        compatAdvice: "적극적인 의사소통이 궁합 향상에 도움됩니다"
+      },
+      9: {
+        loveScore: 90,
+        basic: "지적이고 독립적인 성향",
+        love: "깊이 있고 집중적인 사랑",
+        style: "결과나 관계에 대한 집착이 있을 수 있음",
+        additional: "통찰력이 뛰어남",
+        loveAdvice: "소통을 통해 상대가 숨 쉴 공간도 존중해 주세요",
+        compatAdvice: "지나친 집착보다는 유연함을 키우면 궁합 상승"
+      },
+      10: {
+        loveScore: 88,
+        basic: "감성적이고 변화무쌍한 성향",
+        love: "감정 기복이 커서 파도가 있는 연애",
+        style: "열정적이지만 변덕스러울 수 있음",
+        additional: "결정적 순간에 강한 추진력",
+        loveAdvice: "감정 기복을 조절하고 안정감을 주면 더 좋습니다",
+        compatAdvice: "서로의 감정 변화를 이해하고 보듬어 주세요"
+      },
+      11: {
+        loveScore: 86,
+        basic: "정의롭고 균형 잡힌 성향",
+        love: "공평하고 이성적",
+        style: "평등한 give & take를 선호",
+        additional: "스스로에게 너무 엄격할 때가 있음",
+        loveAdvice: "완벽을 추구하기보다 감정적 교감도 시도하세요",
+        compatAdvice: "상대방을 배려하는 유연성으로 궁합이 높아집니다"
+      }
+    };
+
+    // 이름 -> 번호 배열
+    function getNumberArray(fullName) {
+      const arr = [];
+      for (let ch of fullName) {
+        if (nameToNumber[ch] !== undefined) {
+          arr.push(nameToNumber[ch]);
+        }
+      }
+      return arr;
+    }
+
+    // 번호 배열 -> 요약(3~4문장), 애정점수(평균), 연애 조언(합침), 궁합 조언(합침)
+    function getCombinedResult(numbers) {
+      if (!numbers.length) return null;
+
+      let totalScore = 0;
+      let basics = [];
+      let loves = [];
+      let styles = [];
+      let addls = [];
+      let loveAdviceArr = [];
+      let compatAdviceArr = [];
+
+      numbers.forEach(num => {
+        const info = numberInfo[num];
+        if (info) {
+          totalScore += info.loveScore;
+          basics.push(info.basic);
+          loves.push(info.love);
+          styles.push(info.style);
+          addls.push(info.additional);
+          loveAdviceArr.push(info.loveAdvice);
+          compatAdviceArr.push(info.compatAdvice);
+        }
+      });
+
+      // 평균 점수
+      const avgScore = Math.round(totalScore / numbers.length);
+
+      // 중복 제거 (원한다면 그대로 중복 허용 가능)
+      const setBasic = Array.from(new Set(basics));
+      const setLove = Array.from(new Set(loves));
+      const setStyle = Array.from(new Set(styles));
+      const setAddl = Array.from(new Set(addls));
+      const setLoveAdv = Array.from(new Set(loveAdviceArr));
+      const setCompatAdv = Array.from(new Set(compatAdviceArr));
+
+      // 간단 요약 (3~4문장)
+      const sentence1 = `전체적으로 ${setBasic.join(", ")} 면을 보이면서,`;
+      const sentence2 = `${setLove.join(", ")} 연애관을 갖고 있습니다.`;
+      const sentence3 = `또한 ${setStyle.join(", ")} 특성이 있으며,`;
+      const sentence4 = `${setAddl.join(", ")} 면도 눈에 띕니다.`;
+      const summaryText = `${sentence1} ${sentence2} ${sentence3} ${sentence4}`;
+
+      return {
+        avgScore,
+        summaryText,
+        loveAdviceList: setLoveAdv,
+        compatAdviceList: setCompatAdv
+      };
+    }
+
+    // 궁합점수 (애정점수 차이 × 5), 최소 50
+    function getCompatibility(scoreA, scoreB) {
+      let diff = Math.abs(scoreA - scoreB);
+      let val = 100 - diff * 5;
+      if (val < 50) val = 50;
+      return val;
+    }
+
+    function analyzeLoveFortune() {
+      const name1 = document.getElementById('userName1').value.trim();
+      const name2 = document.getElementById('userName2').value.trim();
+      if (!name1 || !name2) {
+        alert('두 사람의 이름을 모두 입력해주세요!');
+        return;
+      }
+
+      // 첫 번째 사람
+      const arr1 = getNumberArray(name1);
+      if (!arr1.length) {
+        alert(`[${name1}]은(는) 분석할 수 없는 이름입니다.`);
+        return;
+      }
+      const result1 = getCombinedResult(arr1);
+      if (!result1) {
+        alert(`[${name1}]에 대한 분석 결과가 없습니다.`);
+        return;
+      }
+
+      // 두 번째 사람
+      const arr2 = getNumberArray(name2);
+      if (!arr2.length) {
+        alert(`[${name2}]은(는) 분석할 수 없는 이름입니다.`);
+        return;
+      }
+      const result2 = getCombinedResult(arr2);
+      if (!result2) {
+        alert(`[${name2}]에 대한 분석 결과가 없습니다.`);
+        return;
+      }
+
+      // 궁합점수
+      const compScore = getCompatibility(result1.avgScore, result2.avgScore);
+
+      // 결과 DOM 반영
+      document.getElementById('result').style.display = 'block';
+
+      // 첫 사람
+      document.getElementById('analysis1').innerHTML = `
+        <h2>${name1} 님</h2>
+        <p><strong>애정점수:</strong> <span class="highlight">${result1.avgScore}점</span></p>
+        <p>${result1.summaryText}</p>
+        <div class="sub-title">연애 조언</div>
+        <ul>
+          ${result1.loveAdviceList.map(ad => `<li>${ad}</li>`).join("")}
+        </ul>
+      `;
+
+      // 두 사람
+      document.getElementById('analysis2').innerHTML = `
+        <h2>${name2} 님</h2>
+        <p><strong>애정점수:</strong> <span class="highlight">${result2.avgScore}점</span></p>
+        <p>${result2.summaryText}</p>
+        <div class="sub-title">연애 조언</div>
+        <ul>
+          ${result2.loveAdviceList.map(ad => `<li>${ad}</li>`).join("")}
+        </ul>
+      `;
+
+      // 궁합점수
+      document.getElementById('compatibilityScore').textContent = compScore;
+
+      // 두 사람 '궁합 향상' 조언(서로의 compatAdvice 합침)
+      const combinedCompatAdvice = [
+        ...result1.compatAdviceList,
+        ...result2.compatAdviceList
+      ];
+      const uniqueCompatAdvice = Array.from(new Set(combinedCompatAdvice));
+
+      document.getElementById('compatAdviceBox').innerHTML = `
+        <h2>궁합 향상 조언</h2>
+        <ul>
+          ${uniqueCompatAdvice.map(ad => `<li>${ad}</li>`).join("")}
+        </ul>
+      `;
+    }
+  </script>
+</body>
+</html>
