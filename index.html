@@ -3,110 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>두 사람의 수비학 간단 분석</title>
+  <title>김구라 버전 수비학 궁합 분석 (코믹 업그레이드)</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
     * {
-      margin: 0; 
-      padding: 0; 
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
       font-family: 'Noto Sans KR', sans-serif;
     }
     body {
-      background: #fff3f6; 
-      padding: 20px; 
+      background: #fff3f6;
+      padding: 20px;
       line-height: 1.6;
     }
     .container {
-      max-width: 800px; 
+      max-width: 800px;
       margin: 0 auto;
-      background: white; 
-      padding: 30px; 
+      background: #ffffff;
+      padding: 30px;
       border-radius: 15px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     h1 {
-      text-align: center; 
-      color: #e84393; 
+      text-align: center;
+      color: #e84393;
       margin-bottom: 30px;
     }
     .input-section {
-      text-align: center; 
+      text-align: center;
       margin-bottom: 30px;
     }
     input {
-      width: 80%; 
+      width: 80%;
       max-width: 400px;
-      padding: 15px; 
+      padding: 15px;
       font-size: 16px;
-      border: 2px solid #ffc9d5; 
+      border: 2px solid #ffc9d5;
       border-radius: 10px;
-      outline: none; 
+      outline: none;
       margin: 5px 0;
     }
     input:focus {
       border-color: #e84393;
     }
     button {
-      display: block; 
-      width: 200px; 
-      margin: 20px auto; 
+      display: block;
+      width: 200px;
+      margin: 20px auto;
       padding: 15px;
-      background: #e84393; 
-      color: white; 
-      border: none; 
+      background: #e84393;
+      color: white;
+      border: none;
       border-radius: 10px;
-      cursor: pointer; 
-      font-size: 16px; 
+      cursor: pointer;
+      font-size: 16px;
       transition: 0.3s;
     }
     button:hover {
-      background: #d63384; 
+      background: #d63384;
       transform: translateY(-2px);
     }
     .result {
-      display: none; 
+      display: none;
       background: #fff8fa;
-      padding: 25px; 
+      padding: 25px;
       border-radius: 10px;
       margin-top: 30px;
     }
     .analysis-box {
-      background: #ffffff; 
+      background: #ffffff;
       padding: 20px;
-      margin: 20px 0; 
+      margin: 20px 0;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     .analysis-box h2 {
-      color: #e84393; 
+      color: #e84393;
       margin-bottom: 10px;
     }
     .highlight {
-      color: #e84393; 
+      color: #e84393;
       font-weight: bold;
     }
     .compatibility-score {
-      text-align: center; 
-      font-size: 22px; 
-      margin: 20px 0; 
+      text-align: center;
+      font-size: 22px;
+      margin: 20px 0;
       color: #e84393;
     }
     .sub-title {
-      margin: 15px 0 5px; 
-      font-weight: bold; 
+      margin: 15px 0 5px;
+      font-weight: bold;
       color: #ad1457;
     }
-    ul { 
-      margin-left: 20px; 
-      list-style-type: disc; 
+    ul {
+      margin-left: 20px;
+      list-style-type: disc;
+    }
+
+    /* 김구라 톤 코멘트 스타일 */
+    .kimgura-comment {
+      background: #fff2f7;
+      border-left: 5px solid #e84393;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+      color: #ad1457;
+      font-style: italic;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>💘 두 사람의 수비학 간단 분석 💘</h1>
+    <h1>💘수비학 궁합 분석 이건 봐야지! 💘</h1>
+<center><p> 궁합을 보고 싶은 두사람의 이름을 입력하시면 되요. 너무 놀라지 마세요. </p></center>
 
     <div class="input-section">
       <div>
@@ -129,11 +142,17 @@
       </div>
       <!-- 궁합 향상 조언 -->
       <div id="compatAdviceBox" class="analysis-box"></div>
+
+      <!-- 김구라 톤 코멘트 영역 -->
+      <div id="kimguraComment" class="kimgura-comment"></div>
     </div>
   </div>
 
   <script>
-    // "이름 → 숫자" 매핑
+    /***********************************************************************
+     * "이름 → 숫자" 매핑 (2~11번)
+     * 숫자가 많거나 줄이고 싶으면 자유롭게 수정 가능
+     ***********************************************************************/
     const nameToNumber = {
       '민': 2, '임': 2, '노': 2, '모': 2, '삼': 2, '묵': 2, '문': 2, '미': 2, '누': 2, 
       '흠': 2, '움': 2, '점': 2, '무': 2, '겸': 2, '림': 2, '매': 2, '맹': 2, '나': 2, 
@@ -146,10 +165,10 @@
       '솔': 4, '순': 4,
 
       '태': 5, '택': 5, '규': 5, '분': 5, '돔': 5, '던': 5, '만': 5, '엽': 5, '평': 5, 
-      '효': 5, '훈': 5, '도': 5, '다': 5, '봄': 5, '둔': 5, '령': 5, '봉': 5, '탁': 5, 
-      '탄': 5, '대': 5, '덕': 5, '보': 5, '단': 5, '득': 5, '련': 5, '운': 5, '편': 5, 
-      '섭': 5, '복': 5, '필': 5, '담': 5, '듬': 5, '렴': 5, '엄': 5, '표': 5, '포': 5, 
-      '돈': 5, '두': 5, '갑': 5, '당': 5, '딘': 5, '후': 5, '욱': 5, '팽': 5,
+      '효': 5, '훈': 5, '도': 5, '다': 5, '둔': 5, '령': 5, '봉': 5, '탁': 5, '탄': 5, 
+      '대': 5, '덕': 5, '보': 5, '단': 5, '득': 5, '련': 5, '운': 5, '편': 5, '섭': 5, 
+      '복': 5, '필': 5, '담': 5, '듬': 5, '렴': 5, '엄': 5, '표': 5, '포': 5, '돈': 5, 
+      '두': 5, '갑': 5, '당': 5, '딘': 5, '후': 5, '욱': 5, '팽': 5,
 
       '정': 6,
 
@@ -183,99 +202,168 @@
       '의': 11, '검': 11, '곤': 11, '변': 11, '직': 11, '카': 11, '판': 11, '휘': 11
     };
 
-    // 2~11에 대한 정보 (연애 조언 등 확장)
+    /***********************************************************************
+     * 각 번호별 정보(코믹한 김구라 톤)
+     ***********************************************************************/
     const numberInfo = {
       2: {
         loveScore: 82,
-        basic: "신중하고 진지한 성향",
-        love: "깊이 있는 관계를 추구",
-        style: "책임감 있게 천천히 접근",
-        additional: "계획적이고 꼼꼼한 편",
-        loveAdvice: "감정을 좀 더 자주 표현하며 기회를 놓치지 말아요",
-        compatAdvice: "상대의 즉흥성도 이해해 보세요"
+        basic: "신중+진지, 조용히 속태우는 타입",
+        love: "깊이 파고드는 느낌으로 진행",
+        style: "천천히 접근하지만 한번 꽂히면 오래감",
+        additional: "의외로 계획적이라 몰래 준비 잘해놓음",
+        loveAdviceArr: [
+          "감정을 꽁꽁 숨기지 말고 조금만 풀어봐요! 답답하다~",
+          "조용히 눈치만 보지 말고 찔러볼 땐 찌르자, 이거에요~"
+        ],
+        compatAdviceArr: [
+          "상대가 스피디하면 좀만 더 속도 맞춰주면 굿!",
+          "눈치 챙기다가 기회를 놓치면 그만큼 손해!"
+        ]
       },
       3: {
         loveScore: 85,
-        basic: "매력적이고 풍요로운 성향",
-        love: "상대방의 자유를 존중",
-        style: "오는 사람 막지 않고 가는 사람 잡지 않음",
-        additional: "예술적 감각이 좋고 창의적",
-        loveAdvice: "관심 있는 사람에게는 적극적으로 표현하면 더 좋아요",
-        compatAdvice: "때로는 약간의 질투심도 연애에 활력을 줍니다"
+        basic: "매력 철철, 풍요로운 끼쟁이",
+        love: "상대 자유를 보장하며 밀당에도 관대한 편",
+        style: "오는 사람 막지 않고, 가는 사람 붙잡지 않음",
+        additional: "예술감각과 창의력 만렙?",
+        loveAdviceArr: [
+          "열린 마음도 좋지만, 가끔은 솔직하게 애정 표현!",
+          "집착도 조금은 양념이 되니, 그냥 쿨만 하지 맙시다!"
+        ],
+        compatAdviceArr: [
+          "상대방 취향 존중+가벼운 데이트로 즐거움 만땅!",
+          "웃고 떠드는 분위기 조성에 최적임!"
+        ]
       },
       4: {
         loveScore: 87,
-        basic: "리더십이 강한 자수성가형",
-        love: "책임감과 진중함을 중요시",
-        style: "한 번 시작하면 끝까지 충실",
-        additional: "타인을 잘 이끌지만, 부담감도 큼",
-        loveAdvice: "상대방 의견을 존중하면 더 좋은 관계가 돼요",
-        compatAdvice: "부드러운 리더십으로 더 큰 시너지를 낼 수 있어요"
+        basic: "리더십 뿜뿜, 책임감 강함",
+        love: "한번 시작하면 끝까지 해보려는 스타일",
+        style: "주도권 쥐고 싶어하는 성향 있음",
+        additional: "타인을 끌고 가는 힘은 좋지만 가끔 지나침",
+        loveAdviceArr: [
+          "너무 주도만 하면 상대가 질려해요, 배려 좀 합시다잉?",
+          "리더십도 좋지만 흥이 안 살 수도 있으니 부드럽게 가요!"
+        ],
+        compatAdviceArr: [
+          "내 의견도 맞지만 상대 의견도 존중해서 균형 맞추기!",
+          "함께 소소한 의사결정부터 의논해보면 유대감 쑥쑥!"
+        ]
       },
       5: {
         loveScore: 83,
-        basic: "지혜롭고 조언자적인 성향",
-        love: "분석적이고 신중한 연애",
-        style: "깊이 있는 대화와 정신적 교감을 선호",
-        additional: "문제 해결 능력이 뛰어남",
-        loveAdvice: "구체적인 행동과 약속 이행으로 신뢰를 쌓아보세요",
-        compatAdvice: "가끔은 감정적 표현도 더해주면 좋습니다"
+        basic: "지혜롭고 분석 잘하는 타입",
+        love: "두뇌 회전 빠른 연애, 신중하지만 깊이 있음",
+        style: "토론 좋아하고, 감정 교류도 은근 중요",
+        additional: "문제 터지면 해결사 포지션",
+        loveAdviceArr: [
+          "이론만 깔끔해선 사람 마음 못 얻어요! 감정 표현 필수!",
+          "약속 한 거는 반드시 지키는 모습이 매력 상승 포인트!"
+        ],
+        compatAdviceArr: [
+          "서로 아이디어 내고 타협점 찾기, 꽤 잘 맞음!",
+          "가끔 즉흥 데이트로 머리 식혀보는 것도 굿!"
+        ]
       },
       6: {
         loveScore: 89,
-        basic: "낭만적이고 감성적인 성향",
-        love: "로맨틱한 분위기를 선호",
-        style: "감정 교류로 힐링과 안정을 주고받음",
-        additional: "예술적 감수성이 풍부함",
-        loveAdvice: "지나친 감정 소모를 피하고 현실적 균형을 잡아보세요",
-        compatAdvice: "서로의 감성 포인트를 잘 맞춰주면 큰 시너지"
+        basic: "낭만+감성의 끝판왕",
+        love: "로맨틱으로 시작해 감성 파도를 탐",
+        style: "서로 힐링하는 사랑을 추구",
+        additional: "눈물 많고 예술혼 충만, 드라마 찍나?",
+        loveAdviceArr: [
+          "지나친 감성 소비로 지치지 말고, 현실도 챙깁시다!",
+          "가끔은 구름에서 내려와 지상도 좀 봐야 해요!"
+        ],
+        compatAdviceArr: [
+          "상대 감성도 충분히 공감해주면 하트 뿅뿅!",
+          "분위기 메이커? 이벤트 한 방이면 레전드 각~"
+        ]
       },
       7: {
         loveScore: 84,
-        basic: "독립적이고 진취적인 성향",
-        love: "자유롭고 활동적",
-        style: "열정적이고 적극적이나 고집이 있을 수 있음",
-        additional: "새로운 것에 대한 호기심이 많음",
-        loveAdvice: "상대방의 자유도 존중하면 충돌을 줄일 수 있어요",
-        compatAdvice: "고집은 조금만 누그러뜨려주세요"
+        basic: "독립+진취, 자유도를 좋아함",
+        love: "활동성 높은 연애, 고집도 좀 있음",
+        style: "열정적 접근 후, 성격이 안 맞으면 후퇴 빠름",
+        additional: "새로운 일·취미 도전 욕구 충만",
+        loveAdviceArr: [
+          "고집만 조금 빼면 훨씬 매력 2배 됩니다!",
+          "상대가 숨막힐 정도로 끌고 가지 말아주세요!"
+        ],
+        compatAdviceArr: [
+          "함께 모험·여행·취미 등 하면 찰떡 케미!",
+          "너무 방방 뛰면 상대 힘들어 할 수 있으니 조절!"
+        ]
       },
       8: {
         loveScore: 81,
-        basic: "안정적이고 신중한 성향",
-        love: "믿음직하며 성실한 관계를 추구",
-        style: "느리지만 확실한 사랑",
-        additional: "재물운이 비교적 좋은 편",
-        loveAdvice: "너무 느린 템포로 상대를 지치게 하지 않도록 노력하세요",
-        compatAdvice: "적극적인 의사소통이 궁합 향상에 도움됩니다"
+        basic: "안정성+신중함",
+        love: "믿음직하지만 템포가 느려서 상대 지칠 수도",
+        style: "느리지만 꼼꼼한 접근",
+        additional: "재물운 괜찮아 보이네? 부럽!",
+        loveAdviceArr: [
+          "너무 느긋하면 사랑도 떠나요! 속도를 좀 내보자!",
+          "작은 이벤트 하나로 확 점수 딸 수 있어요!"
+        ],
+        compatAdviceArr: [
+          "주저 말고 대화 먼저 시도! 의외로 잘 풀림",
+          "상대가 빠르면 내가 맞춰주는 센스도 필요"
+        ]
       },
       9: {
         loveScore: 90,
-        basic: "지적이고 독립적인 성향",
-        love: "깊이 있고 집중적인 사랑",
-        style: "결과나 관계에 대한 집착이 있을 수 있음",
-        additional: "통찰력이 뛰어남",
-        loveAdvice: "소통을 통해 상대가 숨 쉴 공간도 존중해 주세요",
-        compatAdvice: "지나친 집착보다는 유연함을 키우면 궁합 상승"
+        basic: "지적+독립, 통찰력 굿",
+        love: "깊고 집중적, 근데 집착 생길 수도",
+        style: "혼자 생각 많아서 상대에게 답답함 줄 수 있음",
+        additional: "직관 뛰어나며, 한번 꽂히면 올인",
+        loveAdviceArr: [
+          "상대 숨통을 좀 열어주자고! 집착은 위험~",
+          "여유를 갖추면 더 멋져 보인다니까요?"
+        ],
+        compatAdviceArr: [
+          "상대방 가치관도 존중, 너무 내 방식만 고집 말기",
+          "가볍게 웃고 떠드는 시간도 때론 필요!"
+        ]
       },
       10: {
         loveScore: 88,
-        basic: "감성적이고 변화무쌍한 성향",
-        love: "감정 기복이 커서 파도가 있는 연애",
-        style: "열정적이지만 변덕스러울 수 있음",
-        additional: "결정적 순간에 강한 추진력",
-        loveAdvice: "감정 기복을 조절하고 안정감을 주면 더 좋습니다",
-        compatAdvice: "서로의 감정 변화를 이해하고 보듬어 주세요"
+        basic: "감성적+변덕스러운 면 있음",
+        love: "감정 기복이 꽤 커서 롤러코스터 연애 가능성",
+        style: "열정 폭발, 근데 오래 갈지는 미지수",
+        additional: "결정적 순간에 추진력 미쳤음",
+        loveAdviceArr: [
+          "갑작스런 기분 변화를 잘 컨트롤해야 안정감 생깁니다!",
+          "변덕도 예고해주면 상대가 수용하기 편해요!"
+        ],
+        compatAdviceArr: [
+          "서로 감정 상태를 수시로 점검, 공감 필수!",
+          "열정 불꽃이 식지 않도록 작은 이벤트 주기적으로!"
+        ]
       },
       11: {
         loveScore: 86,
-        basic: "정의롭고 균형 잡힌 성향",
-        love: "공평하고 이성적",
-        style: "평등한 give & take를 선호",
-        additional: "스스로에게 너무 엄격할 때가 있음",
-        loveAdvice: "완벽을 추구하기보다 감정적 교감도 시도하세요",
-        compatAdvice: "상대방을 배려하는 유연성으로 궁합이 높아집니다"
+        basic: "정의+균형 감각 상당히 좋음",
+        love: "공평·이성적이라 기브앤테이크 중시",
+        style: "평등한 사랑을 추구",
+        additional: "스스로에게 엄격해 가끔 번아웃 올 수도",
+        loveAdviceArr: [
+          "너무 올바르기만 하면 재미없을 수 있어요! 감정적 면도 보여주자~",
+          "완벽주의는 때론 독이 됨! 실수도 인간적 매력이라는 걸~"
+        ],
+        compatAdviceArr: [
+          "배려와 융통성을 동시에 챙기면 궁합 급상승!",
+          "즉흥적으로 달려보는 로맨스도 양념이 됩니다!"
+        ]
       }
     };
+
+    // 무작위로 하나 뽑기
+    function pickRandom(arr) {
+      if (!arr || arr.length === 0) return "";
+      const idx = Math.floor(Math.random() * arr.length);
+      return arr[idx];
+    }
 
     // 이름 -> 번호 배열
     function getNumberArray(fullName) {
@@ -288,8 +376,9 @@
       return arr;
     }
 
-    // 번호 배열 -> 요약(3~4문장), 애정점수(평균), 연애 조언(합침), 궁합 조언(합침)
-    function getCombinedResult(numbers) {
+    // 종합 결과 만들기
+    function getCombinedResult(fullName) {
+      const numbers = getNumberArray(fullName);
       if (!numbers.length) return null;
 
       let totalScore = 0;
@@ -297,8 +386,9 @@
       let loves = [];
       let styles = [];
       let addls = [];
-      let loveAdviceArr = [];
-      let compatAdviceArr = [];
+
+      let loveAdvicePicked = [];
+      let compatAdvicePicked = [];
 
       numbers.forEach(num => {
         const info = numberInfo[num];
@@ -308,122 +398,170 @@
           loves.push(info.love);
           styles.push(info.style);
           addls.push(info.additional);
-          loveAdviceArr.push(info.loveAdvice);
-          compatAdviceArr.push(info.compatAdvice);
+
+          // 조언 중 랜덤 하나씩 뽑기
+          const pickLove = pickRandom(info.loveAdviceArr);
+          const pickCompat = pickRandom(info.compatAdviceArr);
+          if (pickLove) loveAdvicePicked.push(pickLove);
+          if (pickCompat) compatAdvicePicked.push(pickCompat);
         }
       });
 
-      // 평균 점수
       const avgScore = Math.round(totalScore / numbers.length);
 
-      // 중복 제거 (원한다면 그대로 중복 허용 가능)
+      // 중복 제거
       const setBasic = Array.from(new Set(basics));
       const setLove = Array.from(new Set(loves));
       const setStyle = Array.from(new Set(styles));
       const setAddl = Array.from(new Set(addls));
-      const setLoveAdv = Array.from(new Set(loveAdviceArr));
-      const setCompatAdv = Array.from(new Set(compatAdviceArr));
 
-      // 간단 요약 (3~4문장)
-      const sentence1 = `전체적으로 ${setBasic.join(", ")} 면을 보이면서,`;
-      const sentence2 = `${setLove.join(", ")} 연애관을 갖고 있습니다.`;
-      const sentence3 = `또한 ${setStyle.join(", ")} 특성이 있으며,`;
-      const sentence4 = `${setAddl.join(", ")} 면도 눈에 띕니다.`;
+      // 김구라식 코믹 요약 (4줄 정도)
+      const sentence1 = `자 보니까, 대체로 <strong>${setBasic.join(", ")}</strong> 요런 느낌이 깔렸고,`;
+      const sentence2 = `연애 쪽도 <strong>${setLove.join(", ")}</strong> 성향이 확 보이는군요?`;
+      const sentence3 = `게다가 <strong>${setStyle.join(", ")}</strong> 특유의 무드를 풍기고,`;
+      const sentence4 = `<strong>${setAddl.join(", ")}</strong> 이라는 점도 슬쩍 드러납니다잉~`;
+
       const summaryText = `${sentence1} ${sentence2} ${sentence3} ${sentence4}`;
 
       return {
+        name: fullName,
         avgScore,
         summaryText,
-        loveAdviceList: setLoveAdv,
-        compatAdviceList: setCompatAdv
+        loveAdviceList: loveAdvicePicked,
+        compatAdviceList: compatAdvicePicked
       };
     }
 
-    // 궁합점수 (애정점수 차이 × 5), 최소 50
-    function getCompatibility(scoreA, scoreB) {
-      let diff = Math.abs(scoreA - scoreB);
+    // 궁합 점수 계산
+    function getCompatibility(score1, score2) {
+      let diff = Math.abs(score1 - score2);
       let val = 100 - diff * 5;
       if (val < 50) val = 50;
       return val;
     }
 
+    // 김구라 톤 코멘트 (재미 강조)
+    function getKimguraComment(score) {
+      if (score >= 90) {
+        return `어이쿠야, 점수가 <strong>${score}점</strong>? 이거 뭐 <strong>“결혼각”</strong> 잡힌 거 아닌가요? 
+                오늘 반지 사러 가도 손색없겠는데요?`;
+      } else if (score >= 75) {
+        return `오호라 <strong>${score}점</strong>이면 꽤 좋은데요~ 
+                서로 성질 좀만 줄이고 양보하면 <strong>“레알 꽁냥꽁냥”</strong> 가능합니다!`;
+      } else {
+        return `아이구, <strong>${score}점</strong>이라... 
+                뭐, 세상사 모르는 거죠! 노력하면 혹시 압니까? 
+                옆집 강아지랑 친해질 확률보단 높을 수도 있어요!`;
+      }
+    }
+
     function analyzeLoveFortune() {
       const name1 = document.getElementById('userName1').value.trim();
       const name2 = document.getElementById('userName2').value.trim();
+
       if (!name1 || !name2) {
         alert('두 사람의 이름을 모두 입력해주세요!');
         return;
       }
 
-      // 첫 번째 사람
-      const arr1 = getNumberArray(name1);
-      if (!arr1.length) {
-        alert(`[${name1}]은(는) 분석할 수 없는 이름입니다.`);
-        return;
-      }
-      const result1 = getCombinedResult(arr1);
+      const result1 = getCombinedResult(name1);
       if (!result1) {
-        alert(`[${name1}]에 대한 분석 결과가 없습니다.`);
+        alert(`이름 [${name1}]은(는) 분석하기 어렵습니다잉?`);
         return;
       }
-
-      // 두 번째 사람
-      const arr2 = getNumberArray(name2);
-      if (!arr2.length) {
-        alert(`[${name2}]은(는) 분석할 수 없는 이름입니다.`);
-        return;
-      }
-      const result2 = getCombinedResult(arr2);
+      const result2 = getCombinedResult(name2);
       if (!result2) {
-        alert(`[${name2}]에 대한 분석 결과가 없습니다.`);
+        alert(`이름 [${name2}]은(는) 분석하기 어렵습니다잉?`);
         return;
       }
 
-      // 궁합점수
       const compScore = getCompatibility(result1.avgScore, result2.avgScore);
 
-      // 결과 DOM 반영
       document.getElementById('result').style.display = 'block';
 
-      // 첫 사람
+      // 첫 번째 사람
       document.getElementById('analysis1').innerHTML = `
-        <h2>${name1} 님</h2>
+        <h2>${result1.name} 님</h2>
         <p><strong>애정점수:</strong> <span class="highlight">${result1.avgScore}점</span></p>
         <p>${result1.summaryText}</p>
-        <div class="sub-title">연애 조언</div>
+        <div class="sub-title">김구라가 준 연애 조언</div>
         <ul>
           ${result1.loveAdviceList.map(ad => `<li>${ad}</li>`).join("")}
         </ul>
       `;
 
-      // 두 사람
+      // 두 번째 사람
       document.getElementById('analysis2').innerHTML = `
-        <h2>${name2} 님</h2>
+        <h2>${result2.name} 님</h2>
         <p><strong>애정점수:</strong> <span class="highlight">${result2.avgScore}점</span></p>
         <p>${result2.summaryText}</p>
-        <div class="sub-title">연애 조언</div>
+        <div class="sub-title">김구라가 준 연애 조언</div>
         <ul>
           ${result2.loveAdviceList.map(ad => `<li>${ad}</li>`).join("")}
         </ul>
       `;
 
-      // 궁합점수
+      // 궁합 점수 표시
       document.getElementById('compatibilityScore').textContent = compScore;
 
-      // 두 사람 '궁합 향상' 조언(서로의 compatAdvice 합침)
-      const combinedCompatAdvice = [
-        ...result1.compatAdviceList,
-        ...result2.compatAdviceList
-      ];
-      const uniqueCompatAdvice = Array.from(new Set(combinedCompatAdvice));
-
+      // 궁합 향상 조언
+      const compatAll = [...result1.compatAdviceList, ...result2.compatAdviceList];
+      const uniqueAdvices = Array.from(new Set(compatAll));
       document.getElementById('compatAdviceBox').innerHTML = `
-        <h2>궁합 향상 조언</h2>
+        <h2>김구라가 내놓은 궁합 개선 꿀팁</h2>
         <ul>
-          ${uniqueCompatAdvice.map(ad => `<li>${ad}</li>`).join("")}
+          ${uniqueAdvices.map(a => `<li>${a}</li>`).join("")}
         </ul>
       `;
+
+      // 김구라 톤 코멘트
+      const comment = getKimguraComment(compScore);
+      document.getElementById('kimguraComment').innerHTML = comment;
     }
   </script>
+
+<style>
+       body {
+           margin: 0;
+           min-height: 100vh;
+           position: relative;
+           background: #f5f5f5;
+       }
+
+       .kakao-btn {
+           display: block;
+           text-decoration: none;
+           background: #FEE500;
+           color: #000;
+           padding: 15px 30px;
+           border-radius: 6px;
+           font-size: 16px;
+           text-align: center;
+           font-weight: bold;
+           position: fixed;
+           bottom: 20px;
+           left: 50%;
+           transform: translateX(-50%);
+           width: 200px;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+       }
+
+       @media (max-width: 768px) {
+           .kakao-btn {
+               padding: 12px 24px;
+               font-size: 14px;
+               width: 160px;
+               bottom: 15px;
+           }
+       }
+   </style>
+</head>
+<body>
+   <a href="http://pf.kakao.com/_Cgxcdn" class="kakao-btn" target="_blank">
+       카카오채널 바로가기
+   </a>
+
+
+
 </body>
 </html>
