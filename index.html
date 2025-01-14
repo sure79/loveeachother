@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>김구라 버전 수비학 궁합 분석 (코믹 업그레이드)</title>
+  <title>수비학 궁합 분석</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
@@ -567,7 +567,7 @@
         <h2>${result1.name} 님</h2>
         <p><strong>애정점수:</strong> <span class="highlight">${result1.avgScore}점</span></p>
         <p>${result1.summaryText}</p>
-        <div class="sub-title">김구라가 준 연애 조언</div>
+        <div class="sub-title">니이스플 연애 조언</div>
         <ul>
           ${result1.loveAdviceList.map(ad => `<li>${ad}</li>`).join("")}
         </ul>
@@ -578,7 +578,7 @@
         <h2>${result2.name} 님</h2>
         <p><strong>애정점수:</strong> <span class="highlight">${result2.avgScore}점</span></p>
         <p>${result2.summaryText}</p>
-        <div class="sub-title">김구라가 준 연애 조언</div>
+        <div class="sub-title">나이스플플 연애 조언</div>
         <ul>
           ${result2.loveAdviceList.map(ad => `<li>${ad}</li>`).join("")}
         </ul>
@@ -591,7 +591,7 @@
       const compatAll = [...result1.compatAdviceList, ...result2.compatAdviceList];
       const uniqueAdvices = Array.from(new Set(compatAll));
       document.getElementById('compatAdviceBox').innerHTML = `
-        <h2>김구라가 내놓은 궁합 개선 꿀팁</h2>
+        <h2>나이스플이이 내놓은 궁합 개선 꿀팁</h2>
         <ul>
           ${uniqueAdvices.map(a => `<li>${a}</li>`).join("")}
         </ul>
