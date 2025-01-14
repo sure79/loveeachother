@@ -17,6 +17,9 @@
       background: #fff3f6;
       padding: 20px;
       line-height: 1.6;
+      /* 페이지 하단 버튼 고정용 */
+      min-height: 100vh;
+      position: relative;
     }
     .container {
       max-width: 800px;
@@ -25,6 +28,7 @@
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 100px; /* 하단 버튼 공간 확보 */
     }
     h1 {
       text-align: center;
@@ -72,6 +76,16 @@
       border-radius: 10px;
       margin-top: 30px;
     }
+
+    /* 궁합 점수 크게 표시, 상단 배치 */
+    .compatibility-score {
+      text-align: center;
+      font-size: 28px;
+      margin: 20px 0;
+      color: #e84393;
+      font-weight: bold;
+    }
+
     .analysis-box {
       background: #ffffff;
       padding: 20px;
@@ -87,12 +101,6 @@
       color: #e84393;
       font-weight: bold;
     }
-    .compatibility-score {
-      text-align: center;
-      font-size: 22px;
-      margin: 20px 0;
-      color: #e84393;
-    }
     .sub-title {
       margin: 15px 0 5px;
       font-weight: bold;
@@ -103,7 +111,7 @@
       list-style-type: disc;
     }
 
-    /* 김구라 톤 코멘트 스타일 */
+    /* 김구라 톤 코멘트 */
     .kimgura-comment {
       background: #fff2f7;
       border-left: 5px solid #e84393;
@@ -115,7 +123,7 @@
       line-height: 1.5;
     }
 
-    /* 재회 지침서 스타일 */
+    /* 재회 지침서 */
     .reunion-box {
       background: #ffffff;
       margin: 20px 0;
@@ -138,6 +146,48 @@
       font-style: italic;
       color: #ad1457;
     }
+
+    /* 하단 버튼들(자사몰, 인스타, 카톡채널) */
+    .bottom-btns-container {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 999;
+    }
+    .mall-btn, .insta-btn, .kakao-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: #FEE500; /* 원하는 색상으로 변경 가능 */
+      color: #000;
+      padding: 15px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+    /* 각 버튼에 다른 색상 주고 싶다면 아래처럼 각각 지정 가능
+       (여기서는 일단 모두 같은 배경색) */
+    .mall-btn {
+      background: #ffd6e0; /* 자사몰 버튼 색상 (예시) */
+    }
+    .insta-btn {
+      background: #c5efff; /* 인스타 버튼 색상 (예시) */
+    }
+    .kakao-btn {
+      background: #FEE500; /* 카카오채널 버튼 색상(노란색) */
+    }
+
+    @media (max-width: 768px) {
+      .mall-btn, .insta-btn, .kakao-btn {
+        padding: 12px 15px;
+        font-size: 14px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -156,15 +206,15 @@
     </div>
 
     <div id="result" class="result">
-      <!-- 첫 번째 사람 -->
-      <div id="analysis1" class="analysis-box"></div>
-      <!-- 두 번째 사람 -->
-      <div id="analysis2" class="analysis-box"></div>
-
-      <!-- 궁합 점수 -->
+      <!-- 궁합 점수 (상단, 크게) -->
       <div class="compatibility-score">
         두 분의 궁합점수: <span id="compatibilityScore"></span>점
       </div>
+
+      <!-- 첫 번째 사람 분석 -->
+      <div id="analysis1" class="analysis-box"></div>
+      <!-- 두 번째 사람 분석 -->
+      <div id="analysis2" class="analysis-box"></div>
 
       <!-- 궁합 향상 조언 -->
       <div id="compatAdviceBox" class="analysis-box"></div>
@@ -178,15 +228,22 @@
         <div id="reunionAdvice" class="reunion-comment"></div>
       </div>
 
-      <!-- 김구라 톤 코멘트 영역 -->
+      <!-- 김구라 톤 코멘트 -->
       <div id="kimguraComment" class="kimgura-comment"></div>
     </div>
+  </div>
+
+  <!-- 하단 버튼 3개: 자사몰, 인스타, 카카오채널 -->
+  <div class="bottom-btns-container">
+    <!-- 실제 URL은 직접 수정해서 넣으세요 -->
+    <a href="https://niceple.com/" target="_blank" class="mall-btn">수비학자사몰</a>
+    <a href="https://www.instagram.com/niceple_tarot/" target="_blank" class="insta-btn">인스타그램</a>
+    <a href="https://pf.kakao.com/_Cgxcdn" target="_blank" class="kakao-btn">카카오톡채널</a>
   </div>
 
   <script>
     /***********************************************************************
      * "이름 → 숫자" 매핑 (2~11번)
-     * 숫자가 많거나 줄이거나, 또는 커스텀 가능
      ***********************************************************************/
     const nameToNumber = {
       '민': 2, '임': 2, '노': 2, '모': 2, '삼': 2, '묵': 2, '문': 2, '미': 2, '누': 2, 
@@ -240,8 +297,8 @@
     /***********************************************************************
      * 각 번호별 정보(코믹한 김구라 톤)
      ***********************************************************************/
-    const numberInfo = {
-      2: {
+    const numberInfo = { 
+         2: {
         loveScore: 82,
         basic: "신중+진지, 조용히 속태우는 타입",
         love: "깊이 파고드는 느낌으로 진행",
@@ -411,7 +468,7 @@
       return arr;
     }
 
-    // 종합 결과 만들기
+    // 종합 결과
     function getCombinedResult(fullName) {
       const numbers = getNumberArray(fullName);
       if (!numbers.length) return null;
@@ -450,7 +507,7 @@
       const setStyle = Array.from(new Set(styles));
       const setAddl = Array.from(new Set(addls));
 
-      // 김구라식 코믹 요약 (4줄 정도)
+      // 김구라식 코믹 요약
       const sentence1 = `자 보니까, 대체로 <strong>${setBasic.join(", ")}</strong> 요런 느낌이 깔렸고,`;
       const sentence2 = `연애 쪽도 <strong>${setLove.join(", ")}</strong> 성향이 확 보이는군요?`;
       const sentence3 = `게다가 <strong>${setStyle.join(", ")}</strong> 특유의 무드를 풍기고,`;
@@ -467,7 +524,7 @@
       };
     }
 
-    // 궁합 점수 계산 (두 사람의 애정점수 차이에 따라)
+    // 궁합 점수 계산
     function getCompatibility(score1, score2) {
       let diff = Math.abs(score1 - score2);
       let val = 100 - diff * 5;
@@ -475,18 +532,15 @@
       return val;
     }
 
-    // 재회 가능성(예시 로직: 두 사람의 평균치+약간 가산)
-    // 실제론 사용자 입맛대로 공식 수정 가능
+    // 재회 확률
     function getReunionProbability(score1, score2) {
-      // 두 사람의 평균 점수에 약간의 가중치를 더함
       let raw = Math.round(((score1 + score2) / 2) + 5);
-      // 범위 제한 (50 ~ 100%)
       if (raw < 50) raw = 50;
       if (raw > 100) raw = 100;
       return raw;
     }
 
-    // 재회용 코믹 코멘트 (score: 50~100)
+    // 재회 코멘트
     function getReunionComment(score) {
       if (score >= 90) {
         return `와우, 재회 가능성이 <strong>${score}%</strong>? 
@@ -504,7 +558,7 @@
       }
     }
 
-    // 재회를 위한 지침서(추가 조언) - 무작위로 2~3개 뽑기
+    // 재회 팁
     const reunionTips = [
       "SNS 염탐 그만! 진짜로 이야기하고 싶다면 솔직하게 다가가세요.",
       "옛 추억 ‘아 그때 좋았지’ 멘트도 너무 자주 꺼내면 독이 될 수 있어요. 적당히~",
@@ -518,7 +572,7 @@
       "무작정 달려들기보단, ‘네가 불편하지 않을 선’에서 신호 보내기. 그것이 예의!"
     ];
 
-    // 김구라 톤 코멘트 (전체 궁합 점수 기준)
+    // 김구라 톤 코멘트
     function getKimguraComment(score) {
       if (score >= 90) {
         return `어이쿠야, 점수가 <strong>${score}점</strong>? 이거 뭐 <strong>“결혼각”</strong> 잡힌 거 아닌가요? 
@@ -553,16 +607,11 @@
         return;
       }
 
-      // 궁합점수 계산
+      // 궁합 점수
       const compScore = getCompatibility(result1.avgScore, result2.avgScore);
+      document.getElementById('compatibilityScore').textContent = compScore;
 
-      // 재회가능성
-      const reunionScore = getReunionProbability(result1.avgScore, result2.avgScore);
-
-      // 화면에 출력
-      document.getElementById('result').style.display = 'block';
-
-      // 첫 번째 사람
+      // 첫 번째 사람 결과
       document.getElementById('analysis1').innerHTML = `
         <h2>${result1.name} 님</h2>
         <p><strong>애정점수:</strong> <span class="highlight">${result1.avgScore}점</span></p>
@@ -573,7 +622,7 @@
         </ul>
       `;
 
-      // 두 번째 사람
+      // 두 번째 사람 결과
       document.getElementById('analysis2').innerHTML = `
         <h2>${result2.name} 님</h2>
         <p><strong>애정점수:</strong> <span class="highlight">${result2.avgScore}점</span></p>
@@ -583,9 +632,6 @@
           ${result2.loveAdviceList.map(ad => `<li>${ad}</li>`).join("")}
         </ul>
       `;
-
-      // 궁합 점수 표시
-      document.getElementById('compatibilityScore').textContent = compScore;
 
       // 궁합 향상 조언
       const compatAll = [...result1.compatAdviceList, ...result2.compatAdviceList];
@@ -597,18 +643,20 @@
         </ul>
       `;
 
-      // 재회 확률 표시
+      // 재회 가능성
+      const reunionScore = getReunionProbability(result1.avgScore, result2.avgScore);
       document.getElementById('reunionScore').textContent = reunionScore;
       const reComment = getReunionComment(reunionScore);
-      // 무작위로 2~3개 재회팁 뽑아서 보여주기
-      const tipCount = Math.floor(Math.random() * 2) + 2; // 2~3개
+
+      // 무작위 2~3개 뽑기
+      const tipCount = Math.floor(Math.random() * 2) + 2;
       let pickTips = [];
       for(let i=0; i<tipCount; i++){
         const tip = pickRandom(reunionTips);
-        // 중복 제거 위해 이미 뽑았는지 체크
         if(!pickTips.includes(tip)) pickTips.push(tip);
       }
       const tipsHtml = pickTips.map(t => `<li>${t}</li>`).join("");
+
       document.getElementById('reunionAdvice').innerHTML = `
         <p>${reComment}</p>
         <div style="margin-top:10px;font-weight:bold;">재회를 위해 이런 팁은 어떤가요?</div>
@@ -617,51 +665,14 @@
         </ul>
       `;
 
-      // 김구라 톤 코멘트(전체 궁합 점수 기준)
+      // 김구라 톤 코멘트
       const comment = getKimguraComment(compScore);
       document.getElementById('kimguraComment').innerHTML = comment;
+
+      // 결과 박스 노출
+      document.getElementById('result').style.display = 'block';
     }
   </script>
 
-  <!-- 카카오 채널 버튼 (원본 그대로) -->
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      position: relative;
-      background: #f5f5f5;
-    }
-
-    .kakao-btn {
-      display: block;
-      text-decoration: none;
-      background: #FEE500;
-      color: #000;
-      padding: 15px 30px;
-      border-radius: 6px;
-      font-size: 16px;
-      text-align: center;
-      font-weight: bold;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 200px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    @media (max-width: 768px) {
-      .kakao-btn {
-        padding: 12px 24px;
-        font-size: 14px;
-        width: 160px;
-        bottom: 15px;
-      }
-    }
-  </style>
-
-  <a href="http://pf.kakao.com/_Cgxcdn" class="kakao-btn" target="_blank">
-    자세한문의는 카카오채널로
-  </a>
 </body>
 </html>
